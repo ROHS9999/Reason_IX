@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth transition */
+body {
+  @apply transition-colors duration-300;
+}

@@ -1,0 +1,174 @@
+{
+ "docs": [
+  {
+   "name": "Lisbon Metro",
+   "text": "The Lisbon Metro opened in 1959 and today has four lines: Blue, Yellow, Green and Red. It carries about 150 million passengers per year. The Red Line was extended to the airport in 2012 and is the newest of the four."
+  },
+  {
+   "name": "Prague Metro",
+   "text": "The Prague Metro opened in 1974 and has three lines labelled A, B and C. It carries roughly 480 million passengers a year. Line C is the oldest and busiest, passing under the Vltava river near the city centre."
+  },
+  {
+   "name": "Python language",
+   "text": "Python is a high-level programming language created by Guido van Rossum and first released in 1991. It emphasises readable code and uses significant indentation. Python 3.0 arrived in December 2008 and broke backward compatibility with Python 2."
+  },
+  {
+   "name": "Rust language",
+   "text": "Rust is a systems programming language first announced by Mozilla in 2010. Its ownership model guarantees memory safety without a garbage collector. Rust 1.0 was released in May 2015, and the Cargo tool manages its packages."
+  },
+  {
+   "name": "Coffee and health",
+   "text": "Moderate coffee drinking of three to four cups per day has been linked in several large cohort studies to a lower risk of type 2 diabetes. Researchers believe chlorogenic acids may improve glucose metabolism. Pregnant women are advised to limit caffeine."
+  },
+  {
+   "name": "Tea and health",
+   "text": "Green tea contains catechins, antioxidants that have been studied for effects on cholesterol and blood pressure. Trials show modest benefits at best. Black tea undergoes oxidation, which converts most catechins into theaflavins."
+  },
+  {
+   "name": "Mount Everest",
+   "text": "Mount Everest, on the border of Nepal and Tibet, stands 8,849 metres above sea level. Tenzing Norgay and Edmund Hillary made the first confirmed ascent in 1953. The climbing season is short, mostly in May, because of weather windows."
+  },
+  {
+   "name": "K2",
+   "text": "K2 is the second highest mountain on Earth at 8,611 metres and lies on the Pakistan-China border. It is considered more technically demanding than Everest, and its first ascent was by an Italian expedition in 1954."
+  },
+  {
+   "name": "Photosynthesis",
+   "text": "Photosynthesis takes place in chloroplasts, where chlorophyll absorbs light energy. The light reactions produce ATP and NADPH, which the Calvin cycle uses to fix carbon dioxide into sugars. Oxygen is released as a by-product."
+  },
+  {
+   "name": "Cellular respiration",
+   "text": "Cellular respiration occurs mainly in mitochondria. Glycolysis splits glucose into pyruvate, the Krebs cycle extracts electrons, and the electron transport chain produces most of the ATP. Oxygen is consumed and carbon dioxide is released."
+  },
+  {
+   "name": "Transformer paper",
+   "text": "The Transformer architecture was introduced in the 2017 paper 'Attention Is All You Need' by researchers at Google. It replaces recurrence with self-attention, allowing parallel training. The original model used six encoder and six decoder layers."
+  },
+  {
+   "name": "BERT",
+   "text": "BERT, released by Google in 2018, is a bidirectional encoder trained with masked language modelling. BERT-base has 110 million parameters and 12 layers, while BERT-large has 340 million parameters and 24 layers."
+  }
+ ],
+ "questions": [
+  {
+   "q": "Which underground railway in Portugal's capital has a red line going to the airport?",
+   "gold": 0,
+   "type": "semantic"
+  },
+  {
+   "q": "How many lines does the Czech capital's subway have?",
+   "gold": 1,
+   "type": "semantic"
+  },
+  {
+   "q": "Who created the programming language known for significant whitespace?",
+   "gold": 2,
+   "type": "semantic"
+  },
+  {
+   "q": "Which language ensures memory safety without garbage collection?",
+   "gold": 3,
+   "type": "semantic"
+  },
+  {
+   "q": "Does drinking coffee help prevent adult-onset diabetes?",
+   "gold": 4,
+   "type": "semantic"
+  },
+  {
+   "q": "What antioxidants in green tea affect cholesterol?",
+   "gold": 5,
+   "type": "semantic"
+  },
+  {
+   "q": "Who first reached the top of the world's tallest mountain?",
+   "gold": 6,
+   "type": "semantic"
+  },
+  {
+   "q": "Which peak is harder to climb than the highest one?",
+   "gold": 7,
+   "type": "semantic"
+  },
+  {
+   "q": "How do plants turn light into sugar?",
+   "gold": 8,
+   "type": "semantic"
+  },
+  {
+   "q": "Where in the cell is most ATP made?",
+   "gold": 9,
+   "type": "semantic"
+  },
+  {
+   "q": "Which neural network design uses self-attention instead of recurrence?",
+   "gold": 10,
+   "type": "semantic"
+  },
+  {
+   "q": "Which Google model learns by predicting masked words?",
+   "gold": 11,
+   "type": "semantic"
+  },
+  {
+   "q": "Red Line airport 2012",
+   "gold": 0,
+   "type": "exact"
+  },
+  {
+   "q": "Line C Vltava",
+   "gold": 1,
+   "type": "exact"
+  },
+  {
+   "q": "Python 3.0 December 2008",
+   "gold": 2,
+   "type": "exact"
+  },
+  {
+   "q": "Cargo Rust 1.0 May 2015",
+   "gold": 3,
+   "type": "exact"
+  },
+  {
+   "q": "chlorogenic acids",
+   "gold": 4,
+   "type": "exact"
+  },
+  {
+   "q": "theaflavins",
+   "gold": 5,
+   "type": "exact"
+  },
+  {
+   "q": "8,849 metres",
+   "gold": 6,
+   "type": "exact"
+  },
+  {
+   "q": "8,611 metres",
+   "gold": 7,
+   "type": "exact"
+  },
+  {
+   "q": "NADPH Calvin cycle",
+   "gold": 8,
+   "type": "exact"
+  },
+  {
+   "q": "glycolysis pyruvate Krebs",
+   "gold": 9,
+   "type": "exact"
+  },
+  {
+   "q": "Attention Is All You Need",
+   "gold": 10,
+   "type": "exact"
+  },
+  {
+   "q": "110 million parameters",
+   "gold": 11,
+   "type": "exact"
+  }
+ ]
+}

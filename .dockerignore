@@ -1,0 +1,12 @@
+FrontWork
+data
+.env
+.git
+.github
+__pycache__
+*.pyc
+venv
+.venv
+node_modules
+tests
+evaluation/results_*

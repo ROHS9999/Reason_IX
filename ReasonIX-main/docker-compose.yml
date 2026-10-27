@@ -1,0 +1,16 @@
+# docker compose up --build      ->  app on http://localhost:5173 , API on http://localhost:8000
+services:
+  backend:
+    build: .
+    env_file: .env                       # GROQ_API_KEY=...  (optional: LANGFUSE_*, ALLOWED_ORIGINS, VERIFY_MODEL)
+    environment:
+      ALLOWED_ORIGINS: http://localhost:5173
+    ports: ["8000:8000"]
+    volumes: ["./data:/app/data"]        # sessions + vector DB survive container restarts
+  frontend:
+    build:
+      context: ./FrontWork/frontend
+      args:
+        VITE_API_URL: http://localhost:8000
+    ports: ["5173:80"]
+    depends_on: [backend]

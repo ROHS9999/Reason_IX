@@ -1,0 +1,3 @@
+Autonomous vehicles rely heavily on sensors such as LiDAR and cameras for navigation.
+
+Explainable AI helps users understand decisions made by autonomous systems.

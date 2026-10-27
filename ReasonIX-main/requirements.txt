@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+python-dotenv
+requests
+beautifulsoup4
+pymupdf
+sentence-transformers
+chromadb
+numpy
+pydantic>=2
+langchain-core
+langchain-groq
