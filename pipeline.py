@@ -1,6 +1,7 @@
 """The ReasonIX pipeline:  chunks -> claims -> cross-source claim pairs -> verdicts -> response.
 Runs in a BACKGROUND THREAD after /upload/ has already answered, so the user never waits on the LLM."""
 import re
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 
 import config
@@ -10,8 +11,14 @@ import utils
 import websearch
 
 
+# def _norm(s: str) -> str:
+#     return re.sub(r"\s+", " ", s).strip().lower()
+
 def _norm(s: str) -> str:
-    return re.sub(r"\s+", " ", s).strip().lower()
+    s = unicodedata.normalize("NFKC", s)       # ligatures, odd spaces
+    s = s.replace("\u00ad", "")                # soft hyphens
+    s = re.sub(r"[^\w\s]", " ", s.lower())     # ignore punctuation (curly vs straight quotes, dashes)
+    return re.sub(r"\s+", " ", s).strip()
 
 
 def _spread(items, n):
