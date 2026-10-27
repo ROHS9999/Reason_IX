@@ -28,13 +28,13 @@ USE_RERANKER = os.getenv("USE_RERANKER", "1") == "1"
 RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
 # --- claim extraction (step 1) ----------------------------------------------
-MAX_CHUNKS_PER_SOURCE = 5    # evenly spread over the document; ONE LLM call per source reads all of them
+MAX_CHUNKS_PER_SOURCE = int(os.getenv("MAX_CHUNKS_PER_SOURCE", "5"))    # evenly spread over the document; ONE LLM call per source reads all of them
 MAX_CLAIMS_PER_SOURCE = 12
 
 # --- cross-source pairing (step 2) ------------------------------------------
 PAIR_TOP_K = 2               # for each claim, only its 2 most similar claims in every OTHER source
 PAIR_MIN_SIMILARITY = 0.45   # cosine similarity; below this the claims are about different things
-MAX_PAIRS = 20               # all pairs are judged in ONE batched LLM call
+MAX_PAIRS = int(os.getenv("MAX_PAIRS", "20"))               # all pairs are judged in ONE batched LLM call
 
 # --- verification step of the LangGraph pipeline ----------------------------------
 VERIFY_MODEL = os.getenv("VERIFY_MODEL", "openai/gpt-oss-120b")   # bigger model re-checks shaky conflicts
@@ -46,6 +46,7 @@ NLI_MODEL = "cross-encoder/nli-deberta-v3-base"
 GUARD_MODE = os.getenv("GUARD_MODE", "filter")   # filter = drop unsupported claims | flag = only mark them | off
 GUARD_ENTAIL = 0.5           # NLI says the source text entails the claim with at least this probability
 GUARD_CONTRADICT = 0.5       # ... or the quote is verbatim AND the source does not contradict the claim by this much
+MIN_PAIR_SUPPORT = float(os.getenv("MIN_PAIR_SUPPORT", "0.2"))   # claims whose NLI support is below this are shown but never compared
 
 # --- web verification (on demand, per claim) ----------------------------------------
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")  # optional; without it the keyless `ddgs` package is used
@@ -60,6 +61,13 @@ MAX_FILE_MB = 20
 MAX_TEXT_CHARS = 200_000
 MAX_URLS = 5
 MAX_URL_BYTES = 5_000_000
+
+# --- rate limiting (per client IP, in memory; protects your Groq quota on a public deployment) ----------
+RATE_LIMIT_ENABLED = os.getenv("RATE_LIMIT_ENABLED", "1") == "1"
+RATE_UPLOADS_PER_HOUR = int(os.getenv("RATE_UPLOADS_PER_HOUR", "20"))
+RATE_QUESTIONS_PER_HOUR = int(os.getenv("RATE_QUESTIONS_PER_HOUR", "60"))
+RATE_WEB_CHECKS_PER_HOUR = int(os.getenv("RATE_WEB_CHECKS_PER_HOUR", "30"))
+TRUST_PROXY = os.getenv("TRUST_PROXY", "0") == "1"   # set to 1 behind a reverse proxy (Cloud Run, nginx) to use X-Forwarded-For
 
 # --- LLM calls ---------------------------------------------------------------
 LLM_RETRIES = 4

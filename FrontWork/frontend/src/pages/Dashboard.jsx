@@ -79,14 +79,15 @@ function ContradictionMeter({ stats, conflicts, delay = 0 }) {
   // Real numbers from the pair checker: contradictions vs agreements among the claim pairs that were judged.
   const nC = stats?.contradictions || 0;
   const nA = stats?.agreements || 0;
-  const total = nC + nA;
+  const nN = stats?.neutral || 0;
+  const total = nC + nA + nN;   // all judged pairs, neutral included
   const contradictionScore = total === 0 ? 0 : Math.round((nC / total) * 100);
-  const agreementScore = total === 0 ? 0 : 100 - contradictionScore;
+  const agreementScore = total === 0 ? 0 : Math.round((nA / total) * 100);
 
   const getLevel = (score) => {
-    if (score >= 70) return { label: "High Contradiction", color: "#E85D04", emoji: "🔥" };
-    if (score >= 40) return { label: "Moderate Tension", color: "#f59e0b", emoji: "⚡" };
-    return { label: "Mostly Aligned", color: "#2D6A4F", emoji: "✅" };
+    if (score >= 40) return { label: "High Contradiction", color: "#E85D04", emoji: "🔥" };
+    if (score >= 15) return { label: "Moderate Tension", color: "#f59e0b", emoji: "⚡" };
+    return { label: "Low Contradiction", color: "#2D6A4F", emoji: "✅" };
   };
   const level = getLevel(contradictionScore);
 
@@ -158,7 +159,7 @@ function ContradictionMeter({ stats, conflicts, delay = 0 }) {
           }} />
         </div>
         <p style={{ fontSize: 11, color: "#aaa", fontFamily: "'DM Sans',sans-serif", marginTop: 10 }}>
-          {stats?.pairs_checked || 0} claim pairs judged · {nC} contradictions · {nA} agreements · {stats?.neutral || 0} neutral
+          {stats?.pairs_checked || 0} claim pairs judged · {nC} {nC === 1 ? "contradiction" : "contradictions"} · {nA} {nA === 1 ? "agreement" : "agreements"} · {nN} neutral
         </p>
       </div>
 
@@ -768,7 +769,8 @@ export default function Dashboard() {
       const data = await res.json();
       const cites = (data.citations || [])
         .map(c => `[${c.n}] ${c.source}${c.page ? ` · p.${c.page}` : ""}`).join("\n");
-      setQueryResult(cites ? `${data.answer}\n\nSources:\n${cites}` : data.answer);
+      const answerText = String(data.answer || "").replace(/\*\*/g, "");   // the UI shows plain text, not markdown
+      setQueryResult(cites ? `${answerText}\n\nSources:\n${cites}` : answerText);
     } catch (e) { setQueryResult("Error: " + e.message); }
     finally { setQuerying(false); }
   }

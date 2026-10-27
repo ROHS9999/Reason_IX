@@ -6,6 +6,7 @@ os.environ.setdefault("GROQ_API_KEY", "test-key")
 os.environ["DATA_DIR"] = tempfile.mkdtemp()
 os.environ["USE_RERANKER"] = "0"            # no model downloads in tests
 os.environ["PRELOAD_MODELS"] = "0"
+os.environ["RATE_LIMIT_ENABLED"] = "0"      # the rate-limit tests switch it on themselves
 
 import numpy as np  # noqa: E402
 import pytest  # noqa: E402

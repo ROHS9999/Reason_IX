@@ -117,7 +117,10 @@ def judge_pairs(pairs, model: str = None):
         "(opposite conclusions, or different values for the same measurement).\n"
         "- agreement: they state the same thing, or one supports the other.\n"
         "- neutral: different topics or different aspects; neither supports nor opposes the other.\n"
-        "If unsure choose neutral. Return one verdict per pair with its pair number as id.",
+        "If unsure choose neutral. Return one verdict per pair with its pair number as id.\n"
+        "confidence (0-100) must reflect how clear THAT pair is, not a default: 90-100 only when the statements "
+        "directly negate each other or give different values for the same quantity; 60-85 when the verdict needs "
+        "some interpretation; below 60 when you are unsure. Do not give every pair the same number.",
         BatchVerdicts,
         {"pairs": text},
         model,

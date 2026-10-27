@@ -11,13 +11,12 @@ import utils
 import websearch
 
 
-# def _norm(s: str) -> str:
-#     return re.sub(r"\s+", " ", s).strip().lower()
-
 def _norm(s: str) -> str:
-    s = unicodedata.normalize("NFKC", s)       # ligatures, odd spaces
+    """Normalise text so a quote can be found in its passage: the PDF has curly quotes / odd hyphens / ligatures,
+    the LLM returns straight ones. Punctuation is ignored, the words still have to match."""
+    s = unicodedata.normalize("NFKC", s)       # ligatures, full-width characters, odd spaces
     s = s.replace("\u00ad", "")                # soft hyphens
-    s = re.sub(r"[^\w\s]", " ", s.lower())     # ignore punctuation (curly vs straight quotes, dashes)
+    s = re.sub(r"[^\w\s]", " ", s.lower())     # curly vs straight quotes, dashes, other punctuation
     return re.sub(r"\s+", " ", s).strip()
 
 
@@ -81,6 +80,7 @@ def analyze_sources(store, sources):
                 "evidence_verified": verified,   # cheap hallucination check: quote really inside the chunk?
             })
         store.claims.extend(claims)
+        source["chunks_read"] = len(chunks)    # shown in the summary, so a long document is never silently sampled
         source["summary"] = out.summary[:3] or ["No summary produced."]
         print(f"[CLAIMS] {source['name']}: {len(claims)} claims")
 
@@ -132,7 +132,10 @@ def guard_new_claims(store):
 def judge_candidates(store):
     """Pick candidate pairs (embedding similarity), then judge all NEW ones in ONE batched LLM call.
     Verdicts are cached in the store, so adding a source never repeats old calls."""
-    claims = usable_claims(store)
+    # claims the NLI model finds almost unsupported by their own passage are shown, but never compared:
+    # a quote can be verbatim and still not state the claim, and such a claim must not create a conflict.
+    claims = [c for c in usable_claims(store)
+              if c.get("support") is None or c["support"] >= config.MIN_PAIR_SUPPORT]
     store.candidates = []
     if len({c["source_id"] for c in claims}) < 2:
         return
@@ -256,12 +259,21 @@ def _pair_sentence(p) -> str:
     return f'{a["source_name"]} and {b["source_name"]} agree: "{a["text"]}"'
 
 
+def _plural(n: int, word: str) -> str:
+    return f"{n} {word}" + ("" if n == 1 else "s")
+
+
 def combined_summary(store) -> list:
     """No extra LLM call: built from the per-source summaries and the judged pairs."""
     pts = [f'{s["name"]}: {s["summary"][0]}' for s in store.sources if s["summary"]]
     st = stats(store.pairs)
-    pts.append(f'Compared {st["pairs_checked"]} claim pairs across sources: {st["contradictions"]} contradictions, '
-               f'{st["agreements"]} agreements, {st["neutral"]} neutral.')
+    pts.append(f'Compared {_plural(st["pairs_checked"], "claim pair")} across sources: '
+               f'{_plural(st["contradictions"], "contradiction")}, {_plural(st["agreements"], "agreement")}, '
+               f'{st["neutral"]} neutral.')
+    partial = [f'{s["name"]} ({s["chunks_read"]} of {len(s["chunk_ids"])} passages)'
+               for s in store.sources if s.get("chunks_read") and s["chunks_read"] < len(s["chunk_ids"])]
+    if partial:
+        pts.append("Long documents are sampled, not read in full: " + "; ".join(partial) + ".")
     return pts
 
 

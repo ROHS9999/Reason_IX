@@ -12,6 +12,7 @@ import config
 import graph
 import llm
 import pipeline
+import ratelimit
 import security
 import utils
 import websearch
@@ -43,7 +44,7 @@ def clear_all(store: Store = Depends(get_store)):
 
 # NOTE: plain `def` (not `async def`): FastAPI runs it in a worker thread, so the slow, blocking LLM calls
 # don't freeze the whole server.
-@app.post("/upload/")
+@app.post("/upload/", dependencies=[Depends(ratelimit.limit("upload", lambda: config.RATE_UPLOADS_PER_HOUR))])
 def upload_data(
     files: List[UploadFile] = File([]),
     text_input: str = Form(""),
@@ -124,7 +125,7 @@ def status(store: Store = Depends(get_store)):
     return pipeline.build_response(store)
 
 
-@app.get("/compare/")
+@app.get("/compare/", dependencies=[Depends(ratelimit.limit("ask", lambda: config.RATE_QUESTIONS_PER_HOUR))])
 def compare(
     query: str = Query(..., min_length=2, max_length=500),
     source_name: str = Query("", max_length=300),
@@ -158,7 +159,7 @@ class VerifyRequest(BaseModel):
     claim_id: str = Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_-]+$")
 
 
-@app.post("/verify/")
+@app.post("/verify/", dependencies=[Depends(ratelimit.limit("web", lambda: config.RATE_WEB_CHECKS_PER_HOUR))])
 def verify(req: VerifyRequest, store: Store = Depends(get_store)):
     """Check ONE claim against the live web: supported / contradicted / unverified, with the sources used."""
     try:

@@ -47,10 +47,12 @@ class Store:
 
     # -- persistence ---------------------------------------------------------------
     def save(self):
-        data = {"sources": self.sources, "chunks": self.chunks, "claims": self.claims,
-                "verdicts": {f"{a}|{b}": v for (a, b), v in self.verdicts.items()},
-                "pairs": self.pairs, "combined_points": self.combined_points, "next_id": self._next_id,
-                "web_checks": self.web_checks}
+        # The background analysis thread may be adding claims / verdicts right now, so work on copies:
+        # iterating a dict that another thread is growing raises "dictionary changed size during iteration".
+        data = {"sources": list(self.sources), "chunks": list(self.chunks), "claims": list(self.claims),
+                "verdicts": {f"{a}|{b}": v for (a, b), v in list(self.verdicts.items())},
+                "pairs": list(self.pairs), "combined_points": list(self.combined_points), "next_id": self._next_id,
+                "web_checks": dict(self.web_checks)}
         os.makedirs(os.path.dirname(_path(self.sid)), exist_ok=True)
         with self._io_lock:
             tmp = _path(self.sid) + ".tmp"
