@@ -1,4 +1,0 @@
-Delete these files from your project (dead code, now replaced):
-  extractor.py     -> logic moved into utils.py
-  embeddings.py    -> embedding code is now in utils.py
-(llm.py is NOT deleted: it is replaced by the new llm.py in this zip.)

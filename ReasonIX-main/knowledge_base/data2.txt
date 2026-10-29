@@ -1,3 +1,0 @@
-Self-driving cars use deep learning models trained on large datasets.
-
-Some researchers argue that explainable AI reduces dependence on raw sensor data.
